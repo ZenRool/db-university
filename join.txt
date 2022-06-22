@@ -66,7 +66,7 @@ ORDER BY `teachers`.`surname`, `teachers`.`name`;
 7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per
 superare ciascuno dei suoi esami
 
-SELECT `students`.`name` AS "nome_matricola", `students`.`surname` AS "cognome_matricola", COUNT(*) AS "n_tentativi", `courses`.`name` AS "nome_esame"
+SELECT `students`.`id`, `students`.`name` AS "nome_matricola", `students`.`surname` AS "cognome_matricola", COUNT(*) AS "n_tentativi", `courses`.`name` AS "nome_esame", MAX(`exam_student`.`vote`) AS `voto_massimo`
 FROM `students`
 INNER JOIN `exam_student`
 ON `students`.`id` = `exam_student`.`student_id`
@@ -74,5 +74,7 @@ INNER JOIN `exams`
 ON `exam_student`.`exam_id` = `exams`.`id`
 INNER JOIN `courses`
 ON `exams`.`course_id` = `courses`.id
-GROUP BY `courses`.`id`
+GROUP BY `students`.`id`, `courses`.`id`
+HAVING `voto_massimo` >= 18
 ORDER BY `students`.`id`, `courses`.`id`;
+
