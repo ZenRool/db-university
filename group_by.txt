@@ -1,12 +1,8 @@
 1. Contare quanti iscritti ci sono stati ogni anno
 
-SELECT COUNT(*) AS "number_sub", `courses`.`year`
-FROM `courses`
-INNER JOIN `degrees`
-ON `courses`.`degree_id` = `degrees`.`id`
-INNER JOIN `students`
-USING(`degree_id`)
-GROUP BY `courses`.`year`;
+SELECT COUNT("year_of_erolment") AS "number_sub", YEAR(`students`.`enrolment_date`) AS `year_of_enrolment`
+FROM `students`
+GROUP BY `year_of_enrolment`;
 
 2. Contare gli insegnanti che hanno l'ufficio nello stesso edificio
 
