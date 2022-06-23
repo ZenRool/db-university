@@ -9,12 +9,20 @@ $departments = [];
 $single_depart;
 
 $id = $_GET["id"];
+
 $sql =
 "SELECT `degrees`.`id`, `degrees`.`name`, `degrees`.`level` 
 FROM `degrees` 
-WHERE `department_id`= $id;
+WHERE `department_id`=?;
 ";
-$result = $connectDB->query($sql);
+//preparazione
+$stmt = $connectDB->prepare($sql);
+$stmt->bind_param("d", $id);
+//esequzione
+$stmt->execute();
+$result = $stmt->get_result();
+
+// $result = $connectDB->query($sql);
 if($result && $result->num_rows > 0) {
     // Ci sono risultati dalla query
     while($row = $result->fetch_assoc()) {
@@ -37,7 +45,12 @@ $sql =
 "SELECT * 
 FROM `departments`  
 WHERE `id` = $id;";
-$result = $connectDB->query($sql);
+
+//preparazione
+$stmt = $connectDB->prepare($sql);
+//esequzione
+$stmt->execute();
+$result = $stmt->get_result();
 
 
 if($result && $result->num_rows > 0) {
