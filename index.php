@@ -1,17 +1,7 @@
-<?php 
-define("DB_SERVERNAME","localhost");
-define("DB_USERNAME","root");
-define("DB_PASSWORD", "");
-define("DB_NAME","university");
-define("DB_PORT", 3306);
-
-$connectDB = new mysqli(DB_SERVERNAME, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT);
-
-if($connectDB && $connectDB->connect_error) {
-    // ERRORE nella connessione al DB 
-    echo "Error in DataBase connection" . $connectDB->connect_error;
-    die();
-}
+<?php
+require_once __DIR__ . "/connectDB.php"; 
+require_once __DIR__ . "/Department.php";
+require_once __DIR__ . "/Degree.php";
 
 $sql = "SELECT * FROM `departments`;";
 $result = $connectDB->query($sql);
@@ -21,7 +11,10 @@ $departments = [];
 if($result && $result->num_rows > 0) {
     // Ci sono risultati dalla query
     while($row = $result->fetch_assoc()) {
-        $departments[] = $row;
+        $depart = new Department($row["id"],$row["name"]);
+        $depart->setContactData($row["address"],$row["phone"], $row["email"],$row["website"]);
+        $depart->head_of_department = $row["head_of_department"];
+        $departments[] = $depart;
     }
     
 }
@@ -55,12 +48,12 @@ else {
     ?>
     <section>
         <h2>
-            <?php echo $department["name"]?>
+            <?php echo $department->name;?>
         </h2>
-        <a href="">Informazioni dipartimento</a>
+        <a href="department_model.php?id=<?php echo $department->id; ?>">Informazioni dipartimento</a>
         <br>
         <p class="phone">
-            Numero di telefono: <em> <?php echo $department["phone"]?> </em>
+            Numero di telefono: <em> <?php echo $department->phone;?> </em>
         </p>
     </section>
     <?php
